@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace HEF.Util
 {
@@ -13,6 +14,19 @@ namespace HEF.Util
         public static bool IsNullOrEmpty(this string str)
         {
             return (str ?? "").Length == 0;
+        }
+
+        /// <summary>
+        /// 获取字节长度
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static int GetBytesLength(this string str)
+        {
+            if (IsNullOrEmpty(str))
+                return 0;
+
+            return Encoding.Default.GetBytes(str).Length;
         }
 
         #region Base64转换
@@ -64,6 +78,63 @@ namespace HEF.Util
             var bytes = Convert.FromBase64String(str);
 
             return Encoding.GetEncoding(encodeName).GetString(bytes);
+        }
+        #endregion
+
+        #region 正则验证
+        /// <summary>
+        /// 正则验证
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="pattern">匹配项</param>
+        /// <returns></returns>
+        public static bool IsMatch(this string str, string pattern)
+        {
+            return IsMatch(str, pattern, RegexOptions.IgnoreCase);
+        }
+
+        /// <summary>
+        /// 正则验证
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="pattern">匹配项</param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static bool IsMatch(this string str, string pattern, RegexOptions options)
+        {
+            if (str.IsNullOrEmpty() || pattern.IsNullOrEmpty())
+                return false;
+
+            var regex = new Regex(pattern, options);
+            return regex.IsMatch(str);
+        }
+        #endregion
+
+        #region Int
+        /// <summary>
+        /// 转换为整数
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static int ParseInt(this string str)
+        {
+            return ParseInt(str, default);
+        }
+        /// <summary>
+        /// 转换为整数
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="defaultValue">默认值</param>
+        /// <returns></returns>
+        public static int ParseInt(this string str, int defaultValue)
+        {
+            if (str.IsNullOrEmpty())
+                return defaultValue;
+
+            if (int.TryParse(str, out int value))            
+                return value;
+            
+            return defaultValue;
         }
         #endregion
     }
