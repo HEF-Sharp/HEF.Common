@@ -137,5 +137,89 @@ namespace HEF.Util
             return defaultValue;
         }
         #endregion
+
+        #region Long
+        /// <summary>
+        /// 转换为长整型
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static long ParseLong(this string str)
+        {
+            return ParseLong(str, default);
+        }
+        /// <summary>
+        /// 转换为长整型
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="defaultValue">默认值</param>
+        /// <returns></returns>
+        public static long ParseLong(this string str, long defaultValue)
+        {
+            if (str.IsNullOrEmpty())
+                return defaultValue;
+
+            if (long.TryParse(str, out long value))
+                return value;
+
+            return defaultValue;
+        }
+        #endregion
+
+        #region Decimal
+        /// <summary>
+        /// 转换为Decimal
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static decimal ParseDecimal(this string str)
+        {
+            return ParseDecimal(str, default);
+        }
+        /// <summary>
+        /// 转换为Decimal
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="defaultValue">默认值</param>
+        /// <returns></returns>
+        public static decimal ParseDecimal(this string str, decimal defaultValue)
+        {
+            if (str.IsNullOrEmpty())
+                return defaultValue;
+
+            if (decimal.TryParse(str, out decimal value))
+                return value;
+
+            return defaultValue;
+        }
+        #endregion
+
+        #region DateTime
+        /// <summary>
+        /// 转换为DateTime
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static DateTime ParseDateTime(this string str)
+        {
+            return ParseDateTime(str, default);
+        }
+        /// <summary>
+        /// 转换为DateTime
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="defaultValue">默认值</param>
+        /// <returns></returns>
+        public static DateTime ParseDateTime(this string str, DateTime defaultValue)
+        {
+            if (str.IsNullOrEmpty())
+                return defaultValue;
+
+            if (DateTime.TryParse(str, out DateTime value))
+                return value;
+
+            return defaultValue;
+        }
+        #endregion
     }
 }
