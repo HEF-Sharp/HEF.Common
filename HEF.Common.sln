@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HEF.Util", "src\HEF.Util\HEF.Util.csproj", "{5F2633FF-E22C-4BA3-99A5-C89D91303B55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HEF.Util", "src\HEF.Util\HEF.Util.csproj", "{5F2633FF-E22C-4BA3-99A5-C89D91303B55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HEF.Core", "src\HEF.Core\HEF.Core.csproj", "{C218E4B4-C084-4A5C-BB57-F4FA9D2E2421}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HEF.Core", "src\HEF.Core\HEF.Core.csproj", "{C218E4B4-C084-4A5C-BB57-F4FA9D2E2421}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{FCFBCEA8-2E2F-45DE-AB6D-98A521B8CDD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HEF.Security.Cryptography", "src\HEF.Security.Cryptography\HEF.Security.Cryptography.csproj", "{FE9BACB2-7F8B-4C2E-8211-94E969B8A038}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base", "Base", "{0F109F72-C1EC-46BA-962E-040E1E11B6F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +27,18 @@ Global
 		{C218E4B4-C084-4A5C-BB57-F4FA9D2E2421}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C218E4B4-C084-4A5C-BB57-F4FA9D2E2421}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C218E4B4-C084-4A5C-BB57-F4FA9D2E2421}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE9BACB2-7F8B-4C2E-8211-94E969B8A038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE9BACB2-7F8B-4C2E-8211-94E969B8A038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE9BACB2-7F8B-4C2E-8211-94E969B8A038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE9BACB2-7F8B-4C2E-8211-94E969B8A038}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5F2633FF-E22C-4BA3-99A5-C89D91303B55} = {0F109F72-C1EC-46BA-962E-040E1E11B6F3}
+		{C218E4B4-C084-4A5C-BB57-F4FA9D2E2421} = {0F109F72-C1EC-46BA-962E-040E1E11B6F3}
+		{FE9BACB2-7F8B-4C2E-8211-94E969B8A038} = {FCFBCEA8-2E2F-45DE-AB6D-98A521B8CDD1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {754EA7F2-9629-4F8B-A086-1196C8D54447}
