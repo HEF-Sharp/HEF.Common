@@ -3,7 +3,10 @@ using System.Security.Cryptography;
 
 namespace HEF.Security.Cryptography
 {
-    public class RandomGenerator : IDisposable
+    /// <summary>
+    /// 随机数生成器
+    /// </summary>
+    public class RandomGenerator : IRandomProvider, IDisposable
     {
         private readonly RandomNumberGenerator _generator;
 

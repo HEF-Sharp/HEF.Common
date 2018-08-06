@@ -3,15 +3,18 @@ using System.Text;
 
 namespace HEF.Security.Cryptography
 {
-    public class RandomStringProvider : IDisposable
+    /// <summary>
+    /// 随机字符串提供程序
+    /// </summary>
+    public class RandomStringProvider
     {
-        private readonly RandomGenerator _generator;
+        private readonly IRandomProvider _randomProvider;
 
         public const string Characters = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-        public RandomStringProvider()
+        public RandomStringProvider(IRandomProvider randomProvider)
         {
-            _generator = new RandomGenerator();
+            _randomProvider = randomProvider ?? throw new ArgumentNullException(nameof(randomProvider));
         }
 
         /// <summary>
@@ -25,7 +28,7 @@ namespace HEF.Security.Cryptography
 
             for (int i = 0; i < length; i++)
             {
-                sb.Append(_generator.Next(10).ToString());
+                sb.Append(_randomProvider.Next(10).ToString());
             }
 
             return sb.ToString();
@@ -42,7 +45,7 @@ namespace HEF.Security.Cryptography
 
             for (int i = 0; i < length; i++)
             {
-                sb.Append(Characters[_generator.Next(26)]);
+                sb.Append(Characters[_randomProvider.Next(26)]);
             }
 
             return sb.ToString();
@@ -60,15 +63,10 @@ namespace HEF.Security.Cryptography
 
             for (int i = 0; i < length; i++)
             {
-                sb.Append(Characters[_generator.Next(charLength)]);
+                sb.Append(Characters[_randomProvider.Next(charLength)]);
             }
 
             return sb.ToString();
-        }
-
-        public void Dispose()
-        {
-            _generator.Dispose();
         }
     }
 }
