@@ -130,8 +130,7 @@
         #region 常用正则
         /// <summary>
         /// 身份证
-        /// </summary>
-        //public const string identityCard = @"(^\d{15}$)|(^\d{18}$)|(\d{17}(?:\d|x|X)$)";
+        /// </summary>        
         public const string identityCard = @"^(^\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$";
         /// <summary>
         /// Email
