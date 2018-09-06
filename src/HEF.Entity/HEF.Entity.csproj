@@ -6,13 +6,17 @@
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <Authors>HEF-Sharp</Authors>
-    <Description>HEF security cryptography library</Description>
+    <Description>HEF entity extension methods library</Description>
     <Company>GreatBillows</Company>
     <Copyright>Copyright © GreatBillows 2018</Copyright>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/HEF-Sharp/HEF.Common</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</PackageLicenseUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HEF.Util\HEF.Util.csproj" />
