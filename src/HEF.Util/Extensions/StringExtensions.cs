@@ -17,6 +17,16 @@ namespace HEF.Util
         }
 
         /// <summary>
+        /// 判断空字符串
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool IsNullOrWhiteSpace(this string str)
+        {
+            return string.IsNullOrWhiteSpace(str);
+        }
+
+        /// <summary>
         /// 获取字节长度
         /// </summary>
         /// <param name="str"></param>
