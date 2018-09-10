@@ -2,6 +2,9 @@
 
 namespace HEF.Entity.Mapper
 {
+    /// <summary>
+    /// 属性映射接口
+    /// </summary>
     public interface IPropertyMap
     {
         string Name { get; }
