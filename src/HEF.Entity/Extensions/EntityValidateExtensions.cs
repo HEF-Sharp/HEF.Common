@@ -8,6 +8,9 @@ using System.Linq.Expressions;
 
 namespace HEF.Entity
 {
+    /// <summary>
+    /// 实体数据验证扩展
+    /// </summary>
     public static class EntityValidateExtensions
     {
         public static ICollection<ValidationResult> Validate<TEntity>(this TEntity entity,
