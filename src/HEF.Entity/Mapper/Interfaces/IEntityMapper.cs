@@ -23,6 +23,8 @@ namespace HEF.Entity.Mapper
     public interface IEntityMapper<TEntity> : IEntityMapper
         where TEntity : class
     {
+        IEntityMapper<TEntity> Schema(string schemaName);
 
+        IEntityMapper<TEntity> Table(string tableName);
     }
 }
