@@ -1,6 +1,9 @@
 ﻿using HEF.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace HEF.Entity.Mapper
 {
@@ -55,6 +58,28 @@ namespace HEF.Entity.Mapper
             TableName = tableName;
 
             return this;
+        }
+
+        public virtual PropertyMap MapProperty(PropertyInfo propertyInfo)
+        {
+            var propertyMap = new PropertyMap(propertyInfo);
+
+            if (Properties.Any(p => string.Compare(p.Name, propertyMap.Name) == 0))
+                throw new ArgumentException($"Duplicate mapping for property {propertyMap.Name} detected.");
+            
+            Properties.Add(propertyMap);
+
+            return propertyMap;
+        }
+
+        public virtual PropertyMap MapProperty(Expression<Func<TEntity, object>> propertyExpression)
+        {
+            var propertyInfo = propertyExpression.ParseProperty();
+
+            if (propertyInfo == null)
+                throw new ArgumentException("parse property failed", nameof(propertyExpression));
+
+            return MapProperty(propertyInfo);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace HEF.Entity
@@ -8,11 +9,14 @@ namespace HEF.Entity
         /// <summary>
         /// 从Lambda表达式中获取PropertyInfo
         /// </summary>
-        /// <param name="lambda"></param>
+        /// <param name="lambdaExpression"></param>
         /// <returns></returns>
-        internal static PropertyInfo ParseProperty(this LambdaExpression lambda)
+        internal static PropertyInfo ParseProperty(this LambdaExpression lambdaExpression)
         {
-            Expression expr = lambda;
+            if (lambdaExpression == null)
+                throw new ArgumentNullException(nameof(lambdaExpression)); 
+
+            Expression expr = lambdaExpression;
             for (; ; )
             {
                 switch (expr.NodeType)

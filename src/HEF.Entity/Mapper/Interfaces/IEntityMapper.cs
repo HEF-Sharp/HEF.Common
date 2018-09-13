@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace HEF.Entity.Mapper
 {
@@ -26,5 +28,9 @@ namespace HEF.Entity.Mapper
         IEntityMapper<TEntity> Schema(string schemaName);
 
         IEntityMapper<TEntity> Table(string tableName);
+
+        PropertyMap MapProperty(PropertyInfo propertyInfo);
+
+        PropertyMap MapProperty(Expression<Func<TEntity, object>> propertyExpression);
     }
 }
