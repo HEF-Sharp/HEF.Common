@@ -64,7 +64,7 @@ namespace HEF.Entity.Mapper
         {
             var propertyMap = new PropertyMap(propertyInfo);
 
-            if (Properties.Any(p => string.Compare(p.Name, propertyMap.Name) == 0))
+            if (Properties.Any(p => string.Compare(p.Name, propertyMap.Name, true) == 0))
                 throw new ArgumentException($"Duplicate mapping for property {propertyMap.Name} detected.");
             
             Properties.Add(propertyMap);
