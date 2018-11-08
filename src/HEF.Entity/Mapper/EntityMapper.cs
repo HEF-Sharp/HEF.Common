@@ -11,7 +11,7 @@ namespace HEF.Entity.Mapper
     /// 实体映射
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public abstract class EntityMapper<TEntity> : IEntityMapper<TEntity>
+    public class EntityMapper<TEntity> : IEntityMapper<TEntity>
         where TEntity : class
     {
         /// <summary>
