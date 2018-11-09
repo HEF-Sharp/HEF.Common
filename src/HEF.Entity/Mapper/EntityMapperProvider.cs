@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace HEF.Entity.Mapper
 {
@@ -26,15 +27,14 @@ namespace HEF.Entity.Mapper
 
         public IEntityMapper GetEntityMapper(Type entityType)
         {
-            if (!_entityMappers.TryGetValue(entityType, out var entityMapper))
-            {
-                Type mapperType = GetMapperTypeFromAssembly(entityType) ?? DefaultEntityMapper.MakeGenericType(entityType);
+            return _entityMappers.GetOrAdd(entityType, BuildEntityMapperInstance);
+        }
 
-                entityMapper = Activator.CreateInstance(mapperType) as IEntityMapper;
-                _entityMappers[entityType] = entityMapper;
-            }
+        protected virtual IEntityMapper BuildEntityMapperInstance(Type entityType)
+        {
+            Type mapperType = GetMapperTypeFromAssembly(entityType) ?? DefaultEntityMapper.MakeGenericType(entityType);
 
-            return entityMapper;
+            return BuildEntityMapperInstanceFactory(mapperType).Invoke();
         }
 
         /// <summary>
@@ -56,6 +56,14 @@ namespace HEF.Entity.Mapper
             };
 
             return searchMapperTypeFromAssembly(entityType.Assembly);
+        }
+
+        private static Func<IEntityMapper> BuildEntityMapperInstanceFactory(Type entityMapperType)
+        {
+            var newEntityMapperExpr = Expression.New(entityMapperType);
+            var conversionExpr = Expression.Convert(newEntityMapperExpr, typeof(IEntityMapper));
+
+            return Expression.Lambda<Func<IEntityMapper>>(conversionExpr).Compile();
         }
     }
 }
