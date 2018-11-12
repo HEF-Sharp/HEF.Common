@@ -7,9 +7,9 @@ namespace HEF.Entity.Mapper
     public abstract class AutoEntityMapper<TEntity> : EntityMapper<TEntity>
         where TEntity : class
     {
-        protected string DeleteFlagPropertyName { get; private set; }
+        public string DeleteFlagPropertyName { get; protected set; }
 
-        public virtual IEntityMapper<TEntity> DeleteFlag(string propertyName)
+        protected virtual AutoEntityMapper<TEntity> DeleteFlag(string propertyName)
         {
             if (propertyName.IsNullOrWhiteSpace())
                 throw new ArgumentNullException(nameof(propertyName));
@@ -19,7 +19,7 @@ namespace HEF.Entity.Mapper
             return this;
         }
 
-        public virtual IEntityMapper<TEntity> AutoMap()
+        protected virtual AutoEntityMapper<TEntity> AutoMap()
         {
             bool hasDefinedKey = Properties.Any(p => p.KeyType != KeyType.NotAKey);
 
