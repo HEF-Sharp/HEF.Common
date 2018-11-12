@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HEF.Entity.Mapper
 {
-    public class AutoEntityMapper<TEntity> : EntityMapper<TEntity>
+    public abstract class AutoEntityMapper<TEntity> : EntityMapper<TEntity>
         where TEntity : class
     {
         protected string DeleteFlagPropertyName { get; private set; }
