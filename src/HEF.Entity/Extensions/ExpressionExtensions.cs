@@ -4,14 +4,14 @@ using System.Reflection;
 
 namespace HEF.Entity
 {
-    internal static class ExpressionExtensions
+    public static class ExpressionExtensions
     {
         /// <summary>
         /// 从Lambda表达式中获取PropertyInfo
         /// </summary>
         /// <param name="lambdaExpression"></param>
         /// <returns></returns>
-        internal static PropertyInfo ParseProperty(this LambdaExpression lambdaExpression)
+        public static PropertyInfo ParseProperty(this LambdaExpression lambdaExpression)
         {
             if (lambdaExpression == null)
                 throw new ArgumentNullException(nameof(lambdaExpression)); 
@@ -34,6 +34,18 @@ namespace HEF.Entity
                         return null;
                 }
             }
+        }
+
+        /// <summary>
+        /// 解析属性名
+        /// </summary>
+        /// <param name="propertyExpr"></param>
+        /// <returns></returns>
+        public static string ParsePropertyName(this LambdaExpression lambdaExpression)
+        {
+            var propertyInfo = ParseProperty(lambdaExpression);
+
+            return propertyInfo?.Name;
         }
     }
 }

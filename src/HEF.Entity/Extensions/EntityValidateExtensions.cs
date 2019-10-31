@@ -19,7 +19,7 @@ namespace HEF.Entity
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var propertyNames = GetPropertyNamesByExpression(ignorePropertyExpressions);
+            var propertyNames = ignorePropertyExpressions.Select(m => m.ParsePropertyName());
 
             return ValidateInternal(entity, (name) => !propertyNames.Contains(name));
         }
@@ -33,7 +33,7 @@ namespace HEF.Entity
             if (includePropertyExpressions.IsEmpty())
                 throw new ArgumentNullException(nameof(includePropertyExpressions));
 
-            var propertyNames = GetPropertyNamesByExpression(includePropertyExpressions);
+            var propertyNames = includePropertyExpressions.Select(m => m.ParsePropertyName());
 
             return ValidateInternal(entity, (name) => propertyNames.Contains(name));
         }
@@ -55,24 +55,6 @@ namespace HEF.Entity
             var isValid = Validator.TryValidateObject(entity, validationContext, validationResults, true);
 
             return (isValid, validationResults);
-        }
-
-        private static IEnumerable<string> GetPropertyNamesByExpression<T>(params Expression<Func<T, object>>[] propertyExpressions)
-        {
-            if (propertyExpressions.IsNotEmpty())
-            {
-                foreach (var propertyExpression in propertyExpressions)
-                {
-                    if (propertyExpression == null)
-                        continue;
-
-                    var property = propertyExpression.ParseProperty();
-                    if (property == null)
-                        continue;
-
-                    yield return property.Name;
-                }
-            }
         }
     }
 }
