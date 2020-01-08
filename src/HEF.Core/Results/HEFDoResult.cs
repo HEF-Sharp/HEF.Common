@@ -53,9 +53,10 @@ namespace HEF.Core
         /// 执行成功
         /// </summary>
         /// <returns></returns>
-        public static HEFDoResult DoSuccess()
+        public static TDoResult DoSuccess<TDoResult>()
+            where TDoResult : HEFDoResult, new()
         {
-            return DoSuccess(null);
+            return DoSuccess<TDoResult>(null);
         }
 
         /// <summary>
@@ -63,18 +64,20 @@ namespace HEF.Core
         /// </summary>
         /// <param name="resultMsg">结果消息</param>
         /// <returns></returns>
-        public static HEFDoResult DoSuccess(string resultMsg)
+        public static TDoResult DoSuccess<TDoResult>(string resultMsg)
+            where TDoResult : HEFDoResult, new()
         {
-            return new HEFDoResult { Type = HEFDoResultType.success.ToString(), Msg = resultMsg };
+            return new TDoResult { Type = HEFDoResultType.success.ToString(), Msg = resultMsg };
         }
 
         /// <summary>
         /// 执行成功
         /// </summary>
         /// <returns></returns>
-        public static HEFDoResult<TResultData> DoSuccess<TResultData>()
+        public static TDoResult DoSuccess<TDoResult, TResultData>()
+            where TDoResult : HEFDoResult<TResultData>, new()
         {
-            return DoSuccess<TResultData>(default);
+            return DoSuccess<TDoResult, TResultData>(default);
         }
 
         /// <summary>
@@ -82,9 +85,10 @@ namespace HEF.Core
         /// </summary>
         /// <param name="resultData">结果数据</param>
         /// <returns></returns>
-        public static HEFDoResult<TResultData> DoSuccess<TResultData>(TResultData resultData)
+        public static TDoResult DoSuccess<TDoResult, TResultData>(TResultData resultData)
+            where TDoResult : HEFDoResult<TResultData>, new()
         {
-            return DoSuccess(resultData, null);
+            return DoSuccess<TDoResult, TResultData>(resultData, null);
         }
 
         /// <summary>
@@ -93,9 +97,10 @@ namespace HEF.Core
         /// <param name="resultData">结果数据</param>
         /// <param name="resultMsg">结果消息</param>       
         /// <returns></returns>
-        public static HEFDoResult<TResultData> DoSuccess<TResultData>(TResultData resultData, string resultMsg)
+        public static TDoResult DoSuccess<TDoResult, TResultData>(TResultData resultData, string resultMsg)
+            where TDoResult : HEFDoResult<TResultData>, new()
         {
-            return new HEFDoResult<TResultData> { Type = HEFDoResultType.success.ToString(), Msg = resultMsg, Data = resultData };
+            return new TDoResult { Type = HEFDoResultType.success.ToString(), Msg = resultMsg, Data = resultData };
         }
         #endregion
 
@@ -105,9 +110,10 @@ namespace HEF.Core
         /// </summary>
         /// <param name="resultMsg">结果消息</param>
         /// <returns></returns>
-        public static HEFDoResult DoFail(string resultMsg)
+        public static TDoResult DoFail<TDoResult>(string resultMsg)
+            where TDoResult : HEFDoResult, new()
         {
-            return new HEFDoResult { Type = HEFDoResultType.fail.ToString(), Msg = resultMsg };
+            return new TDoResult { Type = HEFDoResultType.fail.ToString(), Msg = resultMsg };
         }
 
         /// <summary>
@@ -115,9 +121,10 @@ namespace HEF.Core
         /// </summary>
         /// <param name="resultMsg">结果消息</param>
         /// <returns></returns>
-        public static HEFDoResult<TResultData> DoFail<TResultData>(string resultMsg)
+        public static TDoResult DoFail<TDoResult, TResultData>(string resultMsg)
+            where TDoResult : HEFDoResult<TResultData>, new()
         {
-            return new HEFDoResult<TResultData> { Type = HEFDoResultType.fail.ToString(), Msg = resultMsg };
+            return new TDoResult { Type = HEFDoResultType.fail.ToString(), Msg = resultMsg };
         }
         #endregion
 
@@ -127,35 +134,37 @@ namespace HEF.Core
         /// </summary>
         /// <param name="validateResults">验证结果集合</param>
         /// <returns></returns>
-        public static HEFDoResult DoValidate(params ValidationResult[] validateResults)
+        public static TDoResult DoValidate<TDoResult>(params ValidationResult[] validateResults)
+            where TDoResult : HEFDoResult, new()
         {
             if (validateResults.IsEmpty())
             {
-                return DoSuccess();
+                return DoSuccess<TDoResult>();
             }
 
             var validFailMsg = string.Join(Environment.NewLine, validateResults.Select(m => m.ErrorMessage));
             var validFailData = validateResults.ToDictionary(m => m.MemberNames.FirstOrDefault(), m => m.ErrorMessage);
 
-            return new HEFDoResult { Type = HEFDoResultType.validFail.ToString(), Msg = validFailMsg, ValidFailResults = validFailData };
+            return new TDoResult { Type = HEFDoResultType.validFail.ToString(), Msg = validFailMsg, ValidFailResults = validFailData };
         }
 
         /// <summary>
         /// 执行验证
-        /// </summary>        
+        /// </summary>
         /// <param name="validateResults">验证结果集合</param>
         /// <returns></returns>
-        public static HEFDoResult<TResultData> DoValidate<TResultData>(params ValidationResult[] validateResults)
+        public static TDoResult DoValidate<TDoResult, TResultData>(params ValidationResult[] validateResults)
+            where TDoResult : HEFDoResult<TResultData>, new()
         {
             if (validateResults.IsEmpty())
             {
-                return DoSuccess<TResultData>();
+                return DoSuccess<TDoResult, TResultData>();
             }
 
             var validFailMsg = string.Join(Environment.NewLine, validateResults.Select(m => m.ErrorMessage));
             var validFailData = validateResults.ToDictionary(m => m.MemberNames.FirstOrDefault(), m => m.ErrorMessage);
 
-            return new HEFDoResult<TResultData> { Type = HEFDoResultType.validFail.ToString(), Msg = validFailMsg, ValidFailResults = validFailData };
+            return new TDoResult { Type = HEFDoResultType.validFail.ToString(), Msg = validFailMsg, ValidFailResults = validFailData };
         }
         #endregion
 
@@ -165,9 +174,10 @@ namespace HEF.Core
         /// </summary>
         /// <param name="resultMsg">结果消息</param>
         /// <returns></returns>
-        public static HEFDoResult DoNotFound(string resultMsg)
+        public static TDoResult DoNotFound<TDoResult>(string resultMsg)
+            where TDoResult : HEFDoResult, new()
         {
-            return new HEFDoResult { Type = HEFDoResultType.notFound.ToString(), Msg = resultMsg };
+            return new TDoResult { Type = HEFDoResultType.notFound.ToString(), Msg = resultMsg };
         }
 
         /// <summary>
@@ -175,9 +185,10 @@ namespace HEF.Core
         /// </summary>
         /// <param name="resultMsg">结果消息</param>
         /// <returns></returns>
-        public static HEFDoResult<TResultData> DoNotFound<TResultData>(string resultMsg)
+        public static TDoResult DoNotFound<TDoResult, TResultData>(string resultMsg)
+            where TDoResult : HEFDoResult<TResultData>, new()
         {
-            return new HEFDoResult<TResultData> { Type = HEFDoResultType.notFound.ToString(), Msg = resultMsg };
+            return new TDoResult { Type = HEFDoResultType.notFound.ToString(), Msg = resultMsg };
         }
         #endregion
 
