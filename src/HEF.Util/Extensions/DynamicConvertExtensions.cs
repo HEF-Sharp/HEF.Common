@@ -5,6 +5,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace HEF.Util
 {
@@ -78,7 +79,11 @@ namespace HEF.Util
             {
                 // code: objDic.Add(propertyName, strongObj.propertyName)
                 var propertyNameExpr = Expression.Constant(property.Name, typeof(string));
-                var propertyExpr = Expression.Property(strongTypedExpr, property);
+                Expression propertyExpr = Expression.Property(strongTypedExpr, property);
+                if (property.PropertyType.IsValueType)  //boxing
+                {
+                    propertyExpr = Expression.Convert(propertyExpr, typeof(object));
+                }
                 var addPropertyToDicExpr = Expression.Call(dicVariableExpr, dictionaryAddMethod, propertyNameExpr, propertyExpr);
                 bodyExprs.Add(addPropertyToDicExpr);
             }
@@ -101,69 +106,69 @@ namespace HEF.Util
         #endregion
 
         #region 通过动态方法emit转换
-        ///// <summary>
-        ///// 通过动态方法emit 转换object为字典
-        ///// </summary>
-        ///// <param name="obj"></param>
-        ///// <returns></returns>
-        //public static IDictionary<string, object> ToDictionaryByDynamicEmit(this object obj)
-        //{
-        //    return obj.ToDictionary(GetObjDicDynamicEmitConverter);
-        //}
+        /// <summary>
+        /// 通过动态方法emit 转换object为字典
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static IDictionary<string, object> ToDictionaryByDynamicEmit(this object obj)
+        {
+            return obj.ToDictionary(GetObjDicDynamicEmitConverter);
+        }
 
-        ///// <summary>
-        ///// 生成object转换字典的 动态方法Emit转换器
-        ///// </summary>
-        ///// <param name="objType"></param>
-        ///// <returns></returns>
-        //public static Func<object, IDictionary<string, object>> GetObjDicDynamicEmitConverter(Type objType)
-        //{
-        //    var dictionaryType = typeof(Dictionary<string, object>);
+        /// <summary>
+        /// 生成object转换字典的 动态方法Emit转换器
+        /// </summary>
+        /// <param name="objType"></param>
+        /// <returns></returns>
+        public static Func<object, IDictionary<string, object>> GetObjDicDynamicEmitConverter(Type objType)
+        {
+            var dictionaryType = typeof(Dictionary<string, object>);
 
-        //    // Dictionary.Add(object key, object value)
-        //    var addMethod = dictionaryType.GetMethod("Add");
+            // Dictionary.Add(object key, object value)
+            var addMethod = dictionaryType.GetMethod("Add");
 
-        //    // setup dynamic method
-        //    // Important: make itemType owner of the method to allow access to internal types
-        //    var dynamicMethod = new DynamicMethod(string.Empty, typeof(IDictionary<string, object>), new[] { typeof(object) }, objType);
-        //    var ilGenerator = dynamicMethod.GetILGenerator();
+            // setup dynamic method
+            // Important: make itemType owner of the method to allow access to internal types
+            var dynamicMethod = new DynamicMethod(string.Empty, typeof(IDictionary<string, object>), new[] { typeof(object) }, objType);
+            var ilGenerator = dynamicMethod.GetILGenerator();
 
-        //    // create the Dictionary and store it in a local variable
-        //    ilGenerator.DeclareLocal(dictionaryType);
-        //    ilGenerator.Emit(OpCodes.Newobj, dictionaryType.GetConstructor(Type.EmptyTypes));
-        //    ilGenerator.Emit(OpCodes.Stloc_0);
+            // create the Dictionary and store it in a local variable
+            ilGenerator.DeclareLocal(dictionaryType);
+            ilGenerator.Emit(OpCodes.Newobj, dictionaryType.GetConstructor(Type.EmptyTypes));
+            ilGenerator.Emit(OpCodes.Stloc_0);
 
-        //    var attributes = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-        //    foreach (var property in objType.GetProperties(attributes).Where(info => info.CanRead))
-        //    {
-        //        // load Dictionary (prepare for call later)
-        //        ilGenerator.Emit(OpCodes.Ldloc_0);
-        //        // load key, i.e. name of the property
-        //        ilGenerator.Emit(OpCodes.Ldstr, property.Name);
+            var attributes = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
+            foreach (var property in objType.GetProperties(attributes).Where(info => info.CanRead))
+            {
+                // load Dictionary (prepare for call later)
+                ilGenerator.Emit(OpCodes.Ldloc_0);
+                // load key, i.e. name of the property
+                ilGenerator.Emit(OpCodes.Ldstr, property.Name);
 
-        //        // load value of property to stack
-        //        ilGenerator.Emit(OpCodes.Ldarg_0);
-        //        ilGenerator.EmitCall(OpCodes.Callvirt, property.GetGetMethod(), null);
-        //        // perform boxing if necessary
-        //        if (property.PropertyType.IsValueType)
-        //        {
-        //            ilGenerator.Emit(OpCodes.Box, property.PropertyType);
-        //        }
+                // load value of property to stack
+                ilGenerator.Emit(OpCodes.Ldarg_0);
+                ilGenerator.EmitCall(OpCodes.Callvirt, property.GetGetMethod(), null);
+                // perform boxing if necessary
+                if (property.PropertyType.IsValueType)
+                {
+                    ilGenerator.Emit(OpCodes.Box, property.PropertyType);
+                }
 
-        //        // stack at this point
-        //        // 1. string or null (value)
-        //        // 2. string (key)
-        //        // 3. dictionary
+                // stack at this point
+                // 1. string or null (value)
+                // 2. string (key)
+                // 3. dictionary
 
-        //        // ready to call dict.Add(key, value)
-        //        ilGenerator.EmitCall(OpCodes.Callvirt, addMethod, null);
-        //    }
-        //    // finally load Dictionary and return
-        //    ilGenerator.Emit(OpCodes.Ldloc_0);
-        //    ilGenerator.Emit(OpCodes.Ret);
+                // ready to call dict.Add(key, value)
+                ilGenerator.EmitCall(OpCodes.Callvirt, addMethod, null);
+            }
+            // finally load Dictionary and return
+            ilGenerator.Emit(OpCodes.Ldloc_0);
+            ilGenerator.Emit(OpCodes.Ret);
 
-        //    return (Func<object, IDictionary<string, object>>)dynamicMethod.CreateDelegate(typeof(Func<object, IDictionary<string, object>>));
-        //}
+            return (Func<object, IDictionary<string, object>>)dynamicMethod.CreateDelegate(typeof(Func<object, IDictionary<string, object>>));
+        }
         #endregion
 
         #endregion
