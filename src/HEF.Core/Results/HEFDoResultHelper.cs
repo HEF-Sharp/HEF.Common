@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace HEF.Core
 {
@@ -64,6 +65,18 @@ namespace HEF.Core
         public static HEFDoResult<TResultData> DoNotFound<TResultData>(string resultMsg)
         {
             return HEFDoResult.NotFound<HEFDoResult<TResultData>, TResultData>(resultMsg);
+        }
+        #endregion
+
+        #region 执行异常
+        public static HEFDoResult DoException(Exception ex)
+        {
+            return HEFDoResult.Exception<HEFDoResult>(ex);
+        }
+
+        public static HEFDoResult<TResultData> DoException<TResultData>(Exception ex)
+        {
+            return HEFDoResult.Exception<HEFDoResult<TResultData>, TResultData>(ex);
         }
         #endregion
     }

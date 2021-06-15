@@ -26,7 +26,11 @@ namespace HEF.Core
         /// <summary>
         /// 未找到
         /// </summary>
-        notFound
+        notFound,
+        /// <summary>
+        /// 异常
+        /// </summary>
+        exception
     }
 
     public class HEFDoResult : HEFResult<HEFDoResultType>
@@ -40,6 +44,11 @@ namespace HEF.Core
         /// 是否验证失败
         /// </summary>
         public bool IsValidFail => string.Compare(Type, HEFDoResultType.validFail.ToString()) == 0;
+
+        /// <summary>
+        /// 是否异常
+        /// </summary>
+        public bool IsException => string.Compare(Type, HEFDoResultType.exception.ToString()) == 0;
 
         /// <summary>
         /// 验证失败结果
@@ -189,6 +198,28 @@ namespace HEF.Core
             where TDoResult : HEFDoResult<TResultData>, new()
         {
             return new TDoResult { Type = HEFDoResultType.notFound.ToString(), Msg = resultMsg };
+        }
+        #endregion
+
+        #region 执行异常
+        /// <summary>
+        /// 执行异常
+        /// </summary>
+        /// <returns></returns>
+        public static TDoResult Exception<TDoResult>(Exception ex)
+            where TDoResult : HEFDoResult, new()
+        {
+            return new TDoResult { Type = HEFDoResultType.exception.ToString(), Msg = ex.Message };
+        }
+
+        /// <summary>
+        /// 执行异常
+        /// </summary>
+        /// <returns></returns>
+        public static TDoResult Exception<TDoResult, TResultData>(Exception ex)
+            where TDoResult : HEFDoResult<TResultData>, new()
+        {
+            return new TDoResult { Type = HEFDoResultType.exception.ToString(), Msg = ex.Message };
         }
         #endregion
 
